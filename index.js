@@ -1,4 +1,4 @@
-const express = require('express')
+import express from 'express';
 import { initializeApp } from 'firebase/app';
 import {
     getFirestore, collection, getDocs,
@@ -11,7 +11,7 @@ import { set } from 'firebase/database';
 dotenv.config();
 
 const app = express()
-const port = 3000
+const port = 3001
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: false })); // for parsing application/x-www-form-urlencoded
