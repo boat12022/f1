@@ -7,6 +7,7 @@ import {
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import { set } from 'firebase/database';
+import { name } from 'ejs';
 
 dotenv.config();
 
@@ -69,7 +70,8 @@ app.post('/signup', async (req, res) => {
     email: req.body.email,
   })
   // console.log(reviewID);
-  res.send('Hello World!')
+  // res.send('Hello World!')
+  res.json({name: req.body.name, email: req.body.email});
 });
 
 app.listen(port, () => {
