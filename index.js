@@ -2,34 +2,41 @@ const express = require('express')
 import { initializeApp } from 'firebase/app';
 import {
     getFirestore, collection, getDocs,
+    addDoc, doc, setDoc,
 } from 'firebase/firestore';
 import dotenv from 'dotenv';
+import bodyParser from 'body-parser';
+import { set } from 'firebase/database';
 
 dotenv.config();
 
 const app = express()
 const port = 3000
 
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: false })); // for parsing application/x-www-form-urlencoded
+
+app.use(express.static('public'))
+app.set('view engine', 'ejs');
+
 const firebaseConfig = {
-    apiKey: process.env.API_KEY,
-    authDomain: "b123-f39b6.firebaseapp.com",
-    projectId: "b123-f39b6",
-    storageBucket: "b123-f39b6.appspot.com",
-    messagingSenderId: "767641630260",
-    appId: "1:767641630260:web:9a507baba2c902db5d7c61",
-    measurementId: "G-X2XDJQTYEJ"
+  apiKey: process.env.API_KEY,
+  authDomain: "greenandgray-1314f.firebaseapp.com",
+  projectId: "greenandgray-1314f",
+  storageBucket: "greenandgray-1314f.appspot.com",
+  messagingSenderId: "338846523603",
+  appId: "1:338846523603:web:386c0d143230e68b32f426",
+  measurementId: "G-M5FR1NZMFC"
+
 };
+
 
 initializeApp(firebaseConfig);
 
 const db = getFirestore();
 
-const colRef = collection(db, 'users');
-
-// getDocs(colRef)
-//     .then((snapshot) => {
-//         console.log(snapshot.docs);
-//     });
+const sellerApplicationsColRef = collection(db, 'sellerApplications');
+let reviewsColRef = collection(db, "sellerApplications", "OnboardApplication", "Review");
 
 app.get('/', (req, res) => {
   getDocs(colRef)
@@ -46,6 +53,24 @@ app.get('/', (req, res) => {
     });
   res.send('Hello World!')
 })
+
+app.get('/signup', (req, res) => {
+  res.render("signup", {});
+})
+
+app.post('/signup', async (req, res) => {
+  // var reviewID = reviewsColRef.doc().id;
+  // await setDoc(doc(db, "sellerApplications", "OnboardApplication", "Review", reviewID), {
+  //   name: req.body.name,
+  //   email: req.body.email,
+  // });
+  addDoc(reviewsColRef, {
+    name: req.body.name,
+    email: req.body.email,
+  })
+  // console.log(reviewID);
+  res.send('Hello World!')
+});
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
